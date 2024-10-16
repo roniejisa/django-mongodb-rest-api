@@ -5,3 +5,4 @@ dnspython
 Pillow
 pytz
 django-cors-headers
+pyjwt
