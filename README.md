@@ -1,0 +1,1 @@
+# Hạn chế thay đổi phiên bản các gói để tránh ngồi fix bug cả ngày 😂

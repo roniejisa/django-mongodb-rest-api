@@ -1,0 +1,7 @@
+django
+pymongo=3.12.1
+djongo=1.3.6
+dnspython
+Pillow
+pytz
+django-cors-headers
