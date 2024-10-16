@@ -194,3 +194,4 @@ SIMPLE_JWT = {
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media') # 'data' is my media folder
 MEDIA_URL = '/media/'
+APPEND_SLASH=False

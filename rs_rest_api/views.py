@@ -7,7 +7,6 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.forms.models import model_to_dict
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from .decorators import require_api_key
 from .utils import serialize_customer, hashSign, verifyHash
@@ -127,10 +126,8 @@ class RSRestAPI(View, ValidatorRestAPI):
     def view_detail(self, request, _id):
         try:
             obj = self.model.objects.get(pk=ObjectId(_id))
-        except ObjectDoesNotExist:
-            self.logger.warning(f"{self.name.capitalize()} not found: {_id}")
-            return JsonResponse({'error': f'{self.name.capitalize()} not found.'}, status=404)
-
+        except Exception as e:
+            return SendJson({}, 404, f'Not Found')
         if request.method == 'GET':
             obj_data = serialize_customer(obj, self.exclude_fields)
             return SendJson({
