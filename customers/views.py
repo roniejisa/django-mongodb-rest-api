@@ -99,3 +99,10 @@ class CustomerRestAPI(RSRestAPI):
             'message' : 'Password là bắt buộc!'
         }
     ]
+
+    # Mở ra để đăng ký
+    # def post(self, request, *args, **kwargs):
+    #     print('test')
+    #     if '_id' in kwargs:
+    #         return SendJson({'error': 'Not Found'}, 404, 'Not Found')
+    #     return self.view_list(request)

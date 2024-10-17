@@ -31,15 +31,23 @@ def validatorModel(model, value, type="same", message="Vui lòng nhập"):
         raise serializers.ValidationError(f'{type} bi trung. Vui long chon {type} khac')
     return value
 
-SECRET_KEY = b'pseudorandomly generated server secret key'
-AUTH_SIZE = 16
+AUTH_SIZE = 16  # Example digest size
+SECRET_KEY = b'supersecretkey'  # Ensure the key is bytes
 
-def hashSign(cookie):
-    cookie = cookie.encode('utf-8')
+def hashSign(value):
+    # Ensure value is bytes
+    if isinstance(value, str):
+        value = value.encode('utf-8')
     h = blake2b(digest_size=AUTH_SIZE, key=SECRET_KEY)
-    h.update(cookie)
-    return h.hexdigest().encode('utf-8')
+    h.update(value)
+    return h.hexdigest()  # Return as string
 
-def verifyHash(cookie, sig):
-    good_sig = hashSign(cookie)
+def verifyHash(value, sig):
+    # Ensure value is bytes
+    if isinstance(value, str):
+        value = value.encode('utf-8')
+    good_sig = hashSign(value)  # This is a string
+    # Ensure sig is a string
+    if isinstance(sig, bytes):
+        sig = sig.decode('utf-8')
     return compare_digest(good_sig, sig)

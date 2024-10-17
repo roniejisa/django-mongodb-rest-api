@@ -12,7 +12,7 @@ from .decorators import require_api_key
 from .utils import serialize_customer, hashSign, verifyHash
 from .response import SendJson
 from .validator import ValidatorRestAPI
-from .jwt import check_jwt
+from rs_jwt.jwt import check_jwt
 # from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -50,7 +50,7 @@ class RSRestAPI(View, ValidatorRestAPI):
     def put(self, request, *args, **kwargs):
         if '_id' not in kwargs:
             return SendJson({}, 404, 'Not Found')
-        return self.view_detail(request, kwargs['_id'])@method_decorator(require_api_key)
+        return self.view_detail(request, kwargs['_id'])
     @method_decorator(require_api_key)
     @method_decorator(check_jwt)
     def patch(self, request, *args, **kwargs):

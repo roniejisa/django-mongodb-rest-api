@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',  # Thêm CORS headers
     'rs_rest_api.apps.RsRestApiConfig',
+    'rs_jwt.apps.RsJwtConfig',
 ]
 
 MIDDLEWARE = [
@@ -195,3 +196,7 @@ SIMPLE_JWT = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media') # 'data' is my media folder
 MEDIA_URL = '/media/'
 APPEND_SLASH=False
+TIME_SECRET = 10
+JWT_SECRET = '2kjf3kj2g29gnfdsvfnh2!@#$@#$34gi4o3jg3i4jgkwnregh43oigh2g03h40gu9324hg4u3gh4528gh524g4h08735gh4398gh7345987gh435igbkjbg4u8it3u4hgb34jghb3g4u8uo2h483y8g3ugh3gS34gi4o3jg3i4jgkwnregh43oigh2g03h40gu9324hg4u3gh4528gh524g4h08735gh4398gh7345987gh44528gh524g4h08735gh4398gh7345987gh435igbkjbg35igbkjbg4u8it3u4hgb34jghb3g4u8uo2h483y8g3ugh3gS'
+TIME_REFRESH_SECRET = 60 * 24
+JWT_SECRET_REFRESH = '2kjf3kj2g29gnfdsvfnh2!@#$@#$34gi4o3jg3i4jgkwnregh43oigh4hgb34jghb3g4u8uo2h483y8g3ugh3gS34gi4o3jg3i4jgkwnregh43oigh2g03h40gu9324hg4u3gh4528gh524g4h08735gh4398gh7345987gh44528gh524g4h08735gh4398gh7345987gh435igbkjbg35igbkjbg4u8it3u4hgb34jghb3g4u8uo2h483y8g3ugh3gS2g03h40gu9324hg4u3gh4528gh524g4h08735gh4398gh7345987gh435igbkjbg4u8it3u'
