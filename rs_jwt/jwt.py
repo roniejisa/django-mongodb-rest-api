@@ -3,7 +3,7 @@
 from django.http import JsonResponse
 from functools import wraps
 from rs_rest_api.response import SendJson
-from .utils import verifyHashRefreshToken
+from .utils import verifyHashRefreshToken, verifyHash
 import logging
 import json
 logger = logging.getLogger(__name__)
@@ -22,6 +22,7 @@ def check_jwt(view_func):
         token = jwt_token[7:]
         try:
             payload = verifyHash(token)
+            print(payload)
             if not payload:
                 return SendJson({}, 401, 'Unauthorized')
 
