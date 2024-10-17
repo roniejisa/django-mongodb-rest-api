@@ -41,7 +41,7 @@ class ValidatorRestAPI():
         return False
 
     def check_validator(self, validator, body):
-        if validator['name'] not in body:
+        if validator['name'] not in body or body[validator['name']] == '':
             return validator['message']
         for check in validator['rules']:
             if check['type'] == 'unique':

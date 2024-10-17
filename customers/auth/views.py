@@ -11,10 +11,24 @@ from rs_jwt.utils import signToken, signRefreshToken
 from rs_rest_api.utils import verifyHash, hashSign
 from rs_jwt.jwt import check_jwt, check_jwt_refresh
 from bson.objectid import ObjectId
+from rs_rest_api.validator import ValidatorRestAPI
+from rs_rest_api.decorators import require_api_key
 @method_decorator(csrf_exempt, name='dispatch')
-class Auth(View):
+class Auth(View, ValidatorRestAPI):
     name = 'auth'
     action = None
+    VALIDATOR_POST = [
+        {
+            'name': 'username',
+            'rules': [],
+            'message' : 'Username là bắt buộc!'
+        },
+        {
+            'name': 'password',
+            'rules': [],
+            'message' : 'Password là bắt buộc!'
+        }
+    ]
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.logger = logging.getLogger(self.name)
@@ -26,8 +40,9 @@ class Auth(View):
             case 'profile':
                 return self.profile(request, *args, **kwargs)
         return SendJson({}, 404, 'Not Found')
+
+    @method_decorator(require_api_key)
     def post(self, request, *args, **kwargs):
-        print(self.action)
         match self.action:
             case 'login':
                 return self.login(request, *args, **kwargs)
@@ -37,9 +52,12 @@ class Auth(View):
         return SendJson({}, 404, 'Not Found')
     def login(self, request):
         if request.method == 'POST':
-            print(1)
+            
             # try:
             data = json.loads(request.body)
+            notValid = self.check_not_valid(request, data)
+            if notValid:
+                return SendJson({},400,notValid)
             # try:
             obj = Customer.objects.get(username=data['username'])
 

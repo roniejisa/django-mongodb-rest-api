@@ -101,11 +101,7 @@ class RSRestAPI(View, ValidatorRestAPI):
                 # Kiểm tra dữ liệu bắt buộc
                 notValid = self.check_not_valid(request, data)
                 if notValid:
-                    return SendJson({
-                        "data": {},
-                        "error": 400,
-                        "message": notValid
-                    })
+                    return SendJson({},400,notValid)
                 # Tạo mới đối tượng
                 obj = self.model()
                 for key in data:
@@ -146,11 +142,7 @@ class RSRestAPI(View, ValidatorRestAPI):
                 # Kiểm tra dữ liệu bắt buộc
                 notValid = self.check_not_valid(request, data, obj)
                 if notValid:
-                    return SendJson({
-                        "data": {},
-                        "error": 400,
-                        "message": notValid
-                    })
+                    return SendJson({},400,notValid)
                 # Cập nhật thông tin
                 for key in data:
                     if self.is_auth and key == self.field_hash:
