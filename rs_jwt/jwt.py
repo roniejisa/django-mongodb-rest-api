@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from functools import wraps
 from rs_rest_api.response import SendJson
 from .utils import verifyHashRefreshToken, verifyHash
+from rs_jwt.models import JWTBlacklist
 import logging
 import json
 logger = logging.getLogger(__name__)
@@ -12,7 +13,6 @@ def check_jwt(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         jwt_token = request.headers.get('Authorization')
-        # print(jwt_token)
         if not jwt_token:
             return SendJson({}, 401, 'Unauthorized')
         # Kiểm tra có từ Beazer hay không
@@ -21,8 +21,14 @@ def check_jwt(view_func):
 
         token = jwt_token[7:]
         try:
+            # Vẫn nên có kiểu kiểm tra blacklish kể cả accessToken
+            try:
+                inBlackList = JWTBlacklist.objects.get(token=token)
+                if inBlackList:
+                    return SendJson({}, 401, 'Unauthorized')
+            except Exception:
+                pass
             payload = verifyHash(token)
-            print(payload)
             if not payload:
                 return SendJson({}, 401, 'Unauthorized')
 
@@ -40,6 +46,13 @@ def check_jwt_refresh(view_func):
         data = json.loads(request.body)
         try:
             jwt_token = data.get('refreshToken')
+            # Kiểm tra có nằm trong blacklish hay không đã
+            try:
+                inBlackList = JWTBlacklist.objects.get(token=jwt_token)
+                if inBlackList:
+                    return SendJson({}, 401, 'Unauthorized')
+            except Exception:
+                pass
             # Kiểm tra có từ Beazer hay không
             if not jwt_token:
                 return SendJson({}, 401, 'Unauthorized')
@@ -49,8 +62,9 @@ def check_jwt_refresh(view_func):
                 return SendJson({}, 401, 'Unauthorized')
 
             request.user = payload
+            request.refreshToken = jwt_token
         except Exception:
-            logger.warning('Invalid JWT token')
+            logger.warning('Invalid JWT token or Timeout')
             return SendJson({}, 401, 'Unauthorized')
 
         return view_func(request, *args, **kwargs)
